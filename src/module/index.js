@@ -1,9 +1,15 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
+import { connectRouter, routerMiddleware } from 'connected-react-router'
 import penderMiddleware, { penderReducer } from 'redux-pender'
-import authReducer from './authReducer'
+import thunk from 'redux-thunk'
+import authReducer from './auth/reducer'
 
-export function configureStore() {
-    const middleware = applyMiddleware(penderMiddleware());
+export function configureStore(history) {
+    const middleware = applyMiddleware(
+        routerMiddleware(history),
+        thunk,
+        penderMiddleware()
+    );
 
     const composed = window.__REDUX_DEVTOOLS_EXTENSION__ ?
         compose(
@@ -16,6 +22,7 @@ export function configureStore() {
     return createStore(
         combineReducers({
             auth: authReducer,
+            router: connectRouter(history),
             pender: penderReducer
         }),
         composed

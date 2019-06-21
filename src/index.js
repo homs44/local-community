@@ -1,13 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createBrowserHistory } from 'history'
+import { push } from 'connected-react-router'
 import firebase from "firebase";
 import './index.css';
 import App from './App';
 import { Provider } from 'react-redux'
 import { configureStore } from './module'
-import * as authActions from './module/authReducer'
+import * as authActions from './module/auth/actions'
+import 'semantic-ui-css/semantic.min.css'
+import { ConnectedRouter } from 'connected-react-router'
 
-const store = configureStore();
+export const history = createBrowserHistory();
+
+const store = configureStore(history);
 
 var config = {
     apiKey: "AIzaSyAZY5lJYtQnbGUTd93s7uYUtWFcb2MrEr8",
@@ -21,8 +27,14 @@ var config = {
 
 firebase.initializeApp(config);
 
+
 firebase.auth().onAuthStateChanged(function (user) {
     store.dispatch(authActions.updateUser(user))
+    if(user){
+        store.dispatch(push('/'));
+    }else{
+        store.dispatch(push('/sign-in'));
+    }
 });
 
 /**
@@ -32,6 +44,8 @@ firebase.auth().onAuthStateChanged(function (user) {
  */
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <ConnectedRouter history={history}>
+            <App />
+        </ConnectedRouter>
     </Provider>
     , document.getElementById('root'));

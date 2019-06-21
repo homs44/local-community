@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
+
 import MainPage from './page/MainPage';
-import SigninPage from './page/SigninPage';
-import SignupPage from './page/SignupPage';
+import SignInPage from './page/auth/SignInPage';
+import EmailSignUpPage from './page/auth/EmailSignUpPage';
+import EmailSignInPage from './page/auth/EmailSignInPage';
 import Footer from './component/footer/Footer';
 import Header from './component/header/Header';
 
@@ -10,15 +12,16 @@ import Header from './component/header/Header';
 class App extends Component {
   render() {
     return (
-      <Router>
+      <Switch>
         <div>
           <Header />
           <Route path="/" exact component={MainPage} />
-          <Route path="/signin/" component={SigninPage} />
-          <Route path="/signup/" component={SignupPage} />
+          <Route path="/sign-in" exact component={SignInPage} />
+          <Route path="/sign-in/email" component={EmailSignInPage} />
+          <Route path="/sign-up/email" component={EmailSignUpPage} />
           <Footer />
         </div>
-      </Router>
+      </Switch>
     );
   }
 }
